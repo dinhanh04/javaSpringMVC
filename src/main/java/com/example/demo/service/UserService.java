@@ -14,15 +14,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User handleSaveUser(User user){
+        User saveUser = this.userRepository.save(user);
+        return saveUser;
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public List<User> getUsersByEmail(String email) {
-        return userRepository.findAll();
+        return userRepository.getAllByEmail(email);
     }
 
-    public User handleSaveUser(User user){
-            return this.userRepository.save(user);
-    }
+
 }
