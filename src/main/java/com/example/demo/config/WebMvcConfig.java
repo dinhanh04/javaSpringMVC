@@ -23,9 +23,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         @Override
         public void configureViewResolvers(ViewResolverRegistry registry) {
             registry.viewResolver(viewResolver());
-
         }
 
+        @Override
+        public void addResourceHandlers(ResourceHandlerRegistry registry) {
+            registry
+                    .addResourceHandler("/css/**")
+                    .addResourceLocations("classpath:/static/css/");
     }
+
+
+}
 
 

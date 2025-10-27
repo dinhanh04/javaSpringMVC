@@ -1,11 +1,28 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.User;
+import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
+    private final UserRepository userRepository;
 
-    public String handleService() {
-        return "User info from UserService";
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<User> getUsersByEmail(String email) {
+        return userRepository.findAll();
+    }
+
+    public User handleSaveUser(User user){
+            return this.userRepository.save(user);
     }
 }
