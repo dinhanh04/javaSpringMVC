@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.admin;
 
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
@@ -54,7 +54,7 @@ public class UserController {
         List<User> users = this.userService.getAllUsers();
         model.addAttribute("users1", users);
         System.out.println("check user list: " + users);
-        return "admin/user/tableUser";
+        return "admin/user/show";
     }
 
 
@@ -62,7 +62,7 @@ public class UserController {
     public String getUserById(Model model, @PathVariable Long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("user2", user);
-        return "admin/user/show";
+        return "admin/user/detail";
     }
 
     @RequestMapping("/admin/user/update/{id}")

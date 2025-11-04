@@ -2,12 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>Create User</title>
     <!-- Bootstrap CSS -->
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -15,75 +14,160 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous">
 
-    <!-- Latest compiled JavaScript for Bootstrap -->
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous">
-    </script>
-
-    <!-- jQuery (optional, if you need it for older scripts or plugins) -->
-    <script
-            src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
-    </script>
-
+    <style>
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            margin-top: 10px;
+        }
+        .avatar-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .avatar-preview-text {
+            color: #6c757d;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
     <div class="row justify-content-center">
-<%--        <div class="col-md-6">--%>
-<%--            <!-- Card Form -->--%>
-<%--            <div class="card shadow-lg border-0 rounded-3">--%>
-                <div class="card-header bg-primary text-white text-center py-3">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header text-black text-left py-3">
                     <h3 class="mb-0">Create User</h3>
                 </div>
-    <%--@elvariable id="newUser" type=""--%>
-    <form:form action="/admin/user/create" method="post" modelAttribute="newUser">
+                <div class="card-body p-4">
+                    <%--@elvariable id="newUser" type=""--%>
+                    <form:form action="/admin/user/create" method="post" modelAttribute="newUser" enctype="multipart/form-data">
 
-        <!-- Email -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <form:input path="email" class="form-control" id="email"/>
-        </div>
+                        <div class="row">
+                            <!-- Email -->
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <form:input path="email" class="form-control" id="email" type="email"/>
+                            </div>
 
-        <!-- Password -->
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <form:input path="password" class="form-control" id="password" type="password"/>
-        </div>
+                            <!-- Password -->
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <form:input path="password" class="form-control" id="password" type="password"/>
+                            </div>
+                        </div>
 
-        <!-- Full Name -->
-        <div class="mb-3">
-            <label for="fullname" class="form-label">Full Name</label>
-            <form:input path="fullName" class="form-control" id="fullname"/>
-        </div>
+                        <div class="row">
+                            <!-- Full Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="fullname" class="form-label">Full Name</label>
+                                <form:input path="fullName" class="form-control" id="fullname"/>
+                            </div>
 
-        <!-- Address -->
-        <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <form:input path="address" class="form-control" id="address"/>
-        </div>
+                            <!-- Phone Number -->
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <form:input path="phoneNumber" class="form-control" id="phone" type="tel"/>
+                            </div>
+                        </div>
 
-        <!-- Phone Number -->
-        <div class="mb-3">
-            <label for="phone" class="form-label">Phone Number</label>
-            <form:input path="phoneNumber" class="form-control" id="phone" type="tel"/>
-        </div>
+                        <div class="row">
+                            <!-- Address -->
+                            <div class="col-md-6 mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <form:input path="address" class="form-control" id="address"/>
+                            </div>
 
-        <!-- Submit Button -->
-        <div class="d-grid">
-            <button type="submit" class="btn btn-success btn-lg">
-                Create
-            </button>
-        </div>
+                            <!-- Role -->
+                            <div class="col-md-6 mb-3">
+                                <label for="roleSelect" class="form-label">Role</label>
+                                <select class="form-select" id="roleSelect" name="roleName">
+                                    <option value="">-- Select Role --</option>
+                                    <option value="ADMIN">Admin</option>
+                                    <option value="USER">User</option>
+                                    <option value="MANAGER">Manager</option>
+                                </select>
+                            </div>
+                        </div>
 
-    </form:form>
+                        <!-- Avatar Upload -->
+                        <div class="mb-3">
+                            <label for="avatarFile" class="form-label">Avatar</label>
+                            <input type="file" class="form-control" id="avatarFile" name="avatarFile" accept="image/*">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="noAvatar">
+                                <label class="form-check-label" for="noAvatar">
+                                    No Avatar
+                                </label>
+                            </div>
+                            
+                            <!-- Avatar Preview -->
+                            <div class="avatar-preview" id="avatarPreview">
+                                <div class="avatar-preview-text">No image selected</div>
+                            </div>
+                        </div>
 
-    </div>
+                        <!-- Submit Button -->
+                        <div class="mt-4 text-start">
+                            <button type="submit" class="btn btn-success">
+                                Create User
+                            </button>
+                        </div>
+
+                    </form:form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- jQuery PHẢI ĐẶT TRƯỚC -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Preview avatar khi chọn file
+        $('#avatarFile').on('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    $('#avatarPreview').html('<img src="' + e.target.result + '" alt="Avatar Preview">');
+                }
+                
+                reader.readAsDataURL(file);
+                
+                // Uncheck "No Avatar" nếu user chọn file
+                $('#noAvatar').prop('checked', false);
+            }
+        });
+        
+        // Toggle avatar upload khi check/uncheck "No Avatar"
+        $('#noAvatar').on('change', function() {
+            if ($(this).is(':checked')) {
+                // Disable file input và clear preview
+                $('#avatarFile').val('').prop('disabled', true);
+                $('#avatarPreview').html('<div class="avatar-preview-text">No avatar will be uploaded</div>');
+            } else {
+                // Enable file input
+                $('#avatarFile').prop('disabled', false);
+                $('#avatarPreview').html('<div class="avatar-preview-text">No image selected</div>');
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

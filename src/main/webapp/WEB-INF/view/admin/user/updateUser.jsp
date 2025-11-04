@@ -34,7 +34,7 @@
         <%--        <div class="col-md-6">--%>
         <%--            <!-- Card Form -->--%>
         <%--            <div class="card shadow-lg border-0 rounded-3">--%>
-        <div class="card-header bg-primary text-white text-center py-3">
+        <div class="card-header text-black text-left py-3">
             <h3 class="mb-0">Update User</h3>
         </div>
         <%--@elvariable id="newUser" type=""--%>
@@ -71,8 +71,8 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-success btn-lg">
+            <div class="text-start">
+                <button type="submit" class="btn btn-success">
                     Update
                 </button>
             </div>
