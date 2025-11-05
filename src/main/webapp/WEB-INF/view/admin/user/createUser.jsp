@@ -89,13 +89,11 @@
 
                             <!-- Role -->
                             <div class="col-md-6 mb-3">
-                                <label for="roleSelect" class="form-label">Role</label>
-                                <select class="form-select" id="roleSelect" name="roleName">
-                                    <option value="">-- Select Role --</option>
-                                    <option value="ADMIN">Admin</option>
-                                    <option value="USER">User</option>
-                                    <option value="MANAGER">Manager</option>
-                                </select>
+                                <label class="form-label">Role</label>
+                                <form:select  class="form-select" path="role">
+                                    <form:option value="ADMIN">Admin</form:option>
+                                    <form:option value="USER">User</form:option>
+                                </form:select>
                             </div>
                         </div>
 
