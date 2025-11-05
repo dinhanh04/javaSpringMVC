@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -27,6 +28,11 @@
             <li class="list-group-item">Email: ${user2.email}</li>
             <li class="list-group-item">FullName: ${user2.fullName}</li>
             <li class="list-group-item">Address: ${user2.address}</li>
+
+            <li class="list-group-item">Image:
+                <img src="${user2.avatar.url}" alt="User avatar" style="max-width:150px; height:auto;"/>
+            </li>
+
         </ul>
 
         <!-- Footer (Back button left) -->

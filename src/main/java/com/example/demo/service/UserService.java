@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -9,13 +10,16 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     public User handleSaveUser(User user){
         User saveUser = this.userRepository.save(user);
+
         return saveUser;
     }
 

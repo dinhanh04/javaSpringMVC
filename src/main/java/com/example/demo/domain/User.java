@@ -17,12 +17,12 @@ public class User {
     private String address;
     private String phoneNumber;
 
-    private String avatar;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Image avatar;
 
     //users many to one role
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+
+    private Long roleId;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
@@ -75,28 +75,28 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public List<Order> getOrders() {
         return orders;
     }
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
+
+    public Image getAvatar() {
+        return avatar;
     }
 
     @Override

@@ -1,16 +1,26 @@
 package com.example.demo.controller.admin;
 
+import com.example.demo.domain.Image;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.ImageService;
 import com.example.demo.service.UserService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 //@RestController
@@ -31,9 +41,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ImageService imageService;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService, UserRepository userRepository, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @RequestMapping("/admin/user/create")
@@ -42,10 +54,11 @@ public class UserController {
         return "admin/user/createUser";
     }
 
-    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User dinhanh) {
-        this.userService.handleSaveUser(dinhanh);
-        System.out.println("User info: " + dinhanh);
+    @PostMapping(value = "/admin/user/create")
+    public String createUserPage(Model model, @ModelAttribute("newUser") User dinhanh,@RequestParam("avatarFile") MultipartFile file) {
+        Image image = imageService.handleSaveImage(file);
+        dinhanh.setAvatar(image);
+        userService.handleSaveUser(dinhanh);
         return "redirect:/admin/user";
     }
 
@@ -72,6 +85,18 @@ public class UserController {
         model.addAttribute("newUser", user);
         return "admin/user/updateUser";
     }
+    @GetMapping("/image/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable Long id) throws IOException {
+        Image image = imageService.findById(id);
+        Path path = Paths.get(image.getPath());
+        Resource resource = new UrlResource(path.toUri());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
+    }
+
+
 
     @PostMapping("/admin/user/update/{id}")
     public String updateUser(Model model, @ModelAttribute("newUser") User user) {
