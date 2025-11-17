@@ -11,6 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +44,12 @@ public class UserController {
 
     private final UserService userService;
     private final ImageService imageService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, ImageService imageService) {
+    public UserController(UserService userService, UserRepository userRepository, ImageService imageService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.imageService = imageService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/admin/user/create")
@@ -58,6 +62,8 @@ public class UserController {
     public String createUserPage(Model model, @ModelAttribute("newUser") User dinhanh,@RequestParam("avatarFile") MultipartFile file) {
         Image image = imageService.handleSaveImage(file);
         dinhanh.setAvatar(image);
+        String hassPassord = this.passwordEncoder.encode(dinhanh.getPassword());
+        dinhanh.setPassword(hassPassord);
         userService.handleSaveUser(dinhanh);
         return "redirect:/admin/user";
     }
@@ -105,6 +111,8 @@ public class UserController {
             curentUser.setFullName(user.getFullName());
             curentUser.setAddress(user.getAddress());
             curentUser.setPhoneNumber(user.getPhoneNumber());
+            curentUser.setRoleId(user.getRoleId());
+            curentUser.setAvatar(user.getAvatar());
             this.userService.handleSaveUser(curentUser);
         }
         return "redirect:/admin/user";

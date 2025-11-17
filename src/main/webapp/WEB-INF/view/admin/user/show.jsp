@@ -47,6 +47,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Email</th>
                 <th scope="col">Full Name</th>
+                <th scope="col">Role</th>
                 <th scope="col">Action</th>
             </tr>
             </thead>
@@ -58,6 +59,7 @@
                 <td class="text-center">${user.id}</td>
                 <td class="text-center">${user.email}</td>
                 <td class="text-center">${user.fullName}</td>
+                <td class="text-center">${user.roleId}</td>
                 <td>
                     <div class="d-flex gap-2">
                         <a href="/admin/user/${user.id}" class="btn btn-success">View</a>

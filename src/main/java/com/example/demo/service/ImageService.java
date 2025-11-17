@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.domain.Image;
 import com.example.demo.repository.ImageRepository;
+import jakarta.servlet.ServletContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

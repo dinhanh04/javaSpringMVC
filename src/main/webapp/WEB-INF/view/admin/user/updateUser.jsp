@@ -70,6 +70,18 @@
                 <form:input path="phoneNumber" class="form-control" id="phone" type="tel"/>
             </div>
 
+            <!-- Role -->
+            <div class="mb-3">
+                <label for="roleId" class="form-label">Role</label>
+                <form:input path="roleId" class="form-control" id="roleId" type="tel"/>
+            </div>
+
+            <!-- Avatar -->
+            <div class="mb-3">
+                <label for="avatar" class="form-label">Avatar</label>
+                <form:input path="avatar" class="form-control" id="avatar" type="tel"/>
+            </div>
+
             <!-- Submit Button -->
             <div class="text-start">
                 <button type="submit" class="btn btn-success">
