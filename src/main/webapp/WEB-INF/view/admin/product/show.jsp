@@ -24,7 +24,62 @@
                 <ol class="breadcrumb mb-4">
                     <li class="breadcrumb-item active"><a href="/admin">dashboard</a>/product</li>
                 </ol>
-               product
+               <body>
+
+<div class="container-fluid w-100 px-4">
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="fw-bold mb-0">Table products</h3>
+                    <a href="${pageContext.request.contextPath}/admin/product/create" class="btn btn-primary">
+                        Create a product
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="table_resposive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="user" items="${users1}">
+            <tr>
+                    <%--            <th>${user.id}</th>--%>
+                    <%--            <td>${user.email}</td>--%>
+                <td class="text-center">${user.id}</td>
+                <td class="text-center">${user.email}</td>
+                <td class="text-center">${user.fullName}</td>
+                <td class="text-center">${user.roleId}</td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a href="/admin/user/${user.id}" class="btn btn-success">View</a>
+                        <a href="/admin/user/update/${user.id}" class="btn btn-warning">Update</a>
+                        <c:url value="/admin/user/delete/${user.id}" var="delUrl"/>
+                        <a href="${delUrl}" class="btn btn-danger btn-sm">Delete</a>
+
+                    </div>
+                </td>
+
+            </tr>
+            </c:forEach>
+
+        </table>
+    </div>
+
+</div>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
             </div>
         </main>
         <jsp:include page="../layout/footer.jsp" />
@@ -34,3 +89,4 @@
 <script src="js/scripts.js"></script>
 </body>
 </html>
+

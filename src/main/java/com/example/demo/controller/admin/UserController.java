@@ -5,6 +5,9 @@ import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -15,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -46,7 +51,8 @@ public class UserController {
     private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UserRepository userRepository, ImageService imageService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, UserRepository userRepository, ImageService imageService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.imageService = imageService;
         this.passwordEncoder = passwordEncoder;
@@ -59,7 +65,16 @@ public class UserController {
     }
 
     @PostMapping(value = "/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") User dinhanh,@RequestParam("avatarFile") MultipartFile file) {
+    public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User dinhanh,
+            BindingResult bindingResult, @RequestParam("avatarFile") MultipartFile file) {
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError error : fieldErrors) {
+            System.out.println(">>>>: " + error.getField() + ", Message: " + error.getDefaultMessage());
+        }
+        if(bindingResult.hasErrors()){
+            return "admin/user/createUser";
+        }
+
         Image image = imageService.handleSaveImage(file);
         dinhanh.setAvatar(image);
         String hassPassord = this.passwordEncoder.encode(dinhanh.getPassword());
@@ -76,7 +91,6 @@ public class UserController {
         return "admin/user/show";
     }
 
-
     @RequestMapping(value = "/admin/user/{id}", method = RequestMethod.GET)
     public String getUserById(Model model, @PathVariable Long id) {
         User user = this.userService.getUserById(id);
@@ -91,6 +105,7 @@ public class UserController {
         model.addAttribute("newUser", user);
         return "admin/user/updateUser";
     }
+
     @GetMapping("/image/{id}")
     public ResponseEntity<Resource> getImage(@PathVariable Long id) throws IOException {
         Image image = imageService.findById(id);
@@ -101,8 +116,6 @@ public class UserController {
                 .contentType(MediaType.IMAGE_PNG)
                 .body(resource);
     }
-
-
 
     @PostMapping("/admin/user/update/{id}")
     public String updateUser(Model model, @ModelAttribute("newUser") User user) {
@@ -132,8 +145,6 @@ public class UserController {
         ra.addFlashAttribute("success", "Deleted user #" + id);
         return "redirect:/admin/user";
     }
-
-
 
     @Bean
     ApplicationRunner dsCheck(DataSource ds) {

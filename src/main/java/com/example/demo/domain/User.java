@@ -1,6 +1,9 @@
 package com.example.demo.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -11,16 +14,25 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
+
+    @NotNull
+    @Size(min = 2, max = 20)
     private String password;
+
+    @NotNull
+    @Size(min = 2, max = 50)
     private String fullName;
+
     private String address;
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Image avatar;
 
-    //users many to one role
+    // users many to one role
 
     private Long roleId;
 

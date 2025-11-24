@@ -1,4 +1,6 @@
 <!-- Navbar start -->
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="container-fluid fixed-top">
 <%--    <div class="container topbar bg-primary d-none d-lg-block">--%>
 <%--        <div class="d-flex justify-content-between">--%>
@@ -15,17 +17,14 @@
 <%--    </div>--%>
     <div class="container px-0">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
-            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Fruitables</h1></a>
+            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Laptopshop</h1></a>
             <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars text-primary"></span>
             </button>
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="index.html" class="nav-item nav-link active">Home</a>
-                    <a href="shop.html" class="nav-item nav-link">Shop</a>
-                    <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
-                    <a href="chackout.html" class="nav-item nav-link">Chackout</a>
-                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
+                    <a href="shop.html" class="nav-item nav-link">Sản phẩm</a>
                 </div>
                 <div class="d-flex m-3 me-0">
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
