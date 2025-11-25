@@ -14,7 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,6 +66,11 @@ public class UserController {
     @PostMapping(value = "/admin/user/create")
     public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User dinhanh,
             BindingResult bindingResult, @RequestParam("avatarFile") MultipartFile file) {
+        String password = dinhanh.getPassword();
+        if (password == null || password.length() < 2 || password.length() > 20) {
+            bindingResult.rejectValue("password", "error.password", "size must be between 2 and 20");
+        }
+        
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         for (FieldError error : fieldErrors) {
             System.out.println(">>>>: " + error.getField() + ", Message: " + error.getDefaultMessage());

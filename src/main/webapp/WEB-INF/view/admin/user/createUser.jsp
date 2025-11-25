@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+        <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 
             <html lang="en">
 
@@ -65,54 +67,82 @@
                                                         <div class="row">
                                                             <!-- Email -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorEmail">
+                                                                    <form:errors path="email" />
+                                                                </c:set>
                                                                 <label for="email" class="form-label">Email</label>
-                                                                <form:input path="email" class="form-control" id="email"
-                                                                    type="email" />
-                                                                <form:errors path="email"/>
+                                                                <form:input type="email"
+                                                                class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
+                                                                path="email" />
+                                                                ${errorEmail}
                                                             </div>
 
                                                             <!-- Password -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorPassword">
+                                                                    <form:errors path="password" />
+                                                                </c:set>
                                                                 <label for="password"
                                                                     class="form-label">Password</label>
-                                                                <form:input path="password" class="form-control"
-                                                                    id="password" type="password" />
+                                                                <form:input path="password" type="password"
+                                                                    class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
+                                                                    id="password" />
+                                                                ${errorPassword}
                                                             </div>
                                                         </div>
 
                                                         <div class="row">
                                                             <!-- Full Name -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorFullName">
+                                                                    <form:errors path="fullName" />
+                                                                </c:set>
                                                                 <label for="fullname" class="form-label">Full
                                                                     Name</label>
-                                                                <form:input path="fullName" class="form-control"
+                                                                <form:input path="fullName"
+                                                                    class="form-control ${not empty errorFullName ? 'is-invalid' : ''}"
                                                                     id="fullname" />
+                                                                ${errorFullName}
                                                             </div>
 
                                                             <!-- Phone Number -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorPhoneNumber">
+                                                                    <form:errors path="phoneNumber" />
+                                                                </c:set>
                                                                 <label for="phone" class="form-label">Phone
                                                                     Number</label>
-                                                                <form:input path="phoneNumber" class="form-control"
-                                                                    id="phone" type="tel" />
+                                                                <form:input path="phoneNumber" type="tel"
+                                                                    class="form-control ${not empty errorPhoneNumber ? 'is-invalid' : ''}"
+                                                                    id="phone" />
+                                                                ${errorPhoneNumber}
                                                             </div>
                                                         </div>
 
                                                         <div class="row">
                                                             <!-- Address -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorAddress">
+                                                                    <form:errors path="address" />
+                                                                </c:set>
                                                                 <label for="address" class="form-label">Address</label>
-                                                                <form:input path="address" class="form-control"
+                                                                <form:input path="address"
+                                                                    class="form-control ${not empty errorAddress ? 'is-invalid' : ''}"
                                                                     id="address" />
+                                                                ${errorAddress}
                                                             </div>
 
                                                             <!-- Role -->
                                                             <div class="col-md-6 mb-3">
+                                                                <c:set var="errorRoleId">
+                                                                    <form:errors path="roleId" />
+                                                                </c:set>
                                                                 <label class="form-label">Role</label>
-                                                                <form:select class="form-select" path="roleId">
+                                                                <form:select class="form-select ${not empty errorRoleId ? 'is-invalid' : ''}" path="roleId">
                                                                     <form:option value="1">Admin</form:option>
                                                                     <form:option value="2">User</form:option>
                                                                 </form:select>
+                                                                ${errorRoleId}
                                                             </div>
                                                         </div>
 

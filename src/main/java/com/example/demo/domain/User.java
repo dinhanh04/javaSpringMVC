@@ -19,7 +19,6 @@ public class User {
     private String email;
 
     @NotNull
-    @Size(min = 2, max = 20)
     private String password;
 
     @NotNull
