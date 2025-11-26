@@ -45,26 +45,24 @@
             <thead class="table-light">
             <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Email</th>
-                <th scope="col">Full Name</th>
-                <th scope="col">Role</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Factory</th>
                 <th scope="col">Action</th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="user" items="${users1}">
+            <c:forEach var="product" items="${products1}">
             <tr>
-                    <%--            <th>${user.id}</th>--%>
-                    <%--            <td>${user.email}</td>--%>
-                <td class="text-center">${user.id}</td>
-                <td class="text-center">${user.email}</td>
-                <td class="text-center">${user.fullName}</td>
-                <td class="text-center">${user.roleId}</td>
+                <td class="text-center">${product.id}</td>
+                <td class="text-center">${product.name}</td>
+                <td class="text-center">${product.price}</td>
+                <td class="text-center">${product.factory}</td>
                 <td>
                     <div class="d-flex gap-2">
-                        <a href="/admin/user/${user.id}" class="btn btn-success">View</a>
-                        <a href="/admin/user/update/${user.id}" class="btn btn-warning">Update</a>
-                        <c:url value="/admin/user/delete/${user.id}" var="delUrl"/>
+                        <a href="/admin/product/${product.id}" class="btn btn-success">View</a>
+                        <a href="/admin/product/update/${product.id}" class="btn btn-warning">Update</a>
+                        <c:url value="/admin/product/delete/${product.id}" var="delUrl"/>
                         <a href="${delUrl}" class="btn btn-danger btn-sm">Delete</a>
 
                     </div>

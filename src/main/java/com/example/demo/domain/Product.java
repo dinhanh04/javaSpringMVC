@@ -2,8 +2,6 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "products")
 public class Product {
@@ -13,7 +11,11 @@ public class Product {
 
     private String name;
     private double price;
-    private String image;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     private String detailDesc;
     private String shortDesc;
     private long quantity;
@@ -45,11 +47,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 

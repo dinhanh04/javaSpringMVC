@@ -53,6 +53,11 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
+                                <h1 class="mt-4">Manager Users</h1>
+                                <ol class="breadcrumb mb-4">
+                                    <li class="breadcrumb-item active"><a href="/admin">dashboard</a> / <a href="/admin/user">user</a> / create</li>
+                                </ol>
+                            <div class="container-fluid px-4">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-10 mt-5">
                                         <div class="card shadow-lg border-0 rounded-3">
