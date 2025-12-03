@@ -11,3 +11,5 @@ public interface CustomerCTVRepository extends JpaRepository<CustomerCTV, Intege
     Optional<CustomerCTV> findByEmail(String email);
 }
 
+
+

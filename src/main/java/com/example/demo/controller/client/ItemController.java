@@ -5,21 +5,18 @@ import com.example.demo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class HomePageController {
+public class ItemController {
     private final ProductService productService;
-
-    public HomePageController(ProductService productService) {
+    public ItemController(ProductService productService) {
         this.productService = productService;
     }
-
-    @GetMapping("/")
-    public String getHomePage(Model model) {
-        List<Product> products = this.productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "client/homepage/show";
+    @GetMapping("/product/{id}")
+    public String product(@PathVariable Long id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "client/product/detail";
     }
 }
