@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +133,7 @@
                                                 ${product.shortDesc}
                                             </p>
                                             <div class="d-flex justify-content-between flex-lg-wrap">
-                                                <p class="text-primary fs-4 fw-bold mb-0">$${product.price}</p>
+                                                <p class="text-primary fs-4 fw-bold mb-0"><fmt:formatNumber value="${product.price}" type="number" />đ</p>
                                                 <a href="#" class="btn btn-primary w-100 rounded-pill py-2"><i class="fa fa-shopping-bag me-2"></i> Add to cart</a>
                                             </div>
                                         </div>

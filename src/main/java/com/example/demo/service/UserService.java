@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
+import com.example.demo.dto.RegisterDTO;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,19 @@ public class UserService {
 
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
+    }
+
+    public boolean checkEmailExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User registerDtoToUser(RegisterDTO registerDTO){
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName()+" "+registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+
+        return user;
     }
 
 }
