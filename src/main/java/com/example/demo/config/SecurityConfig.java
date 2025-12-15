@@ -20,29 +20,31 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CustomSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/do-login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/", true)
-                .failureUrl("/login?error")
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-            );
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN"))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/do-login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .successHandler(customSuccessHandler()) // Use CustomSuccessHandler instead of defaultSuccessUrl
+                        .failureUrl("/login?error")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
 
         return http.build();
     }
