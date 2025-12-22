@@ -155,4 +155,48 @@ public class ProductService {
 
         return cart.getSum();
     }
+
+    @org.springframework.transaction.annotation.Transactional
+    public void deleteCartDetail(Long cartDetailId, String email) {
+        System.out.println(">>> ProductService.deleteCartDetail - CartDetailId: " + cartDetailId + ", Email: " + email);
+
+        // Get user
+        User user = this.userService.getUserByEmail(email);
+        if (user == null) {
+            System.out.println(">>> ERROR: User not found with email: " + email);
+            throw new RuntimeException("User not found");
+        }
+
+        // Get cart
+        Cart cart = this.cartRepository.findByUserId(user.getId());
+        if (cart == null) {
+            System.out.println(">>> ERROR: Cart not found for user: " + user.getId());
+            throw new RuntimeException("Cart not found");
+        }
+
+        // Get cart detail
+        Optional<CartDetail> cartDetailOpt = this.cartDetailRepository.findById(cartDetailId);
+        if (cartDetailOpt.isPresent()) {
+            CartDetail cartDetail = cartDetailOpt.get();
+            
+            // Verify that this cart detail belongs to the user's cart
+            if (!cartDetail.getCartId().equals(cart.getId())) {
+                System.out.println(">>> ERROR: Cart detail does not belong to user's cart");
+                throw new RuntimeException("Unauthorized access");
+            }
+
+            // Delete cart detail
+            this.cartDetailRepository.delete(cartDetail);
+            System.out.println(">>> Deleted cart detail: " + cartDetailId);
+
+            // Update cart sum
+            int remainingItems = this.cartDetailRepository.findByCartId(cart.getId()).size();
+            cart.setSum(remainingItems);
+            this.cartRepository.save(cart);
+            System.out.println(">>> Updated cart sum to: " + remainingItems);
+        } else {
+            System.out.println(">>> ERROR: Cart detail not found with id: " + cartDetailId);
+            throw new RuntimeException("Cart detail not found");
+        }
+    }
 }

@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.service.ProductService;
 
@@ -72,5 +72,38 @@ public class CartController {
         }
 
         return "client/cart/cart";
+    }
+
+    @PostMapping("/cart/delete/{id}")
+    public String deleteCartItem(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        System.out.println(">>> Deleting cart item - CartDetailId: " + id + ", Email: " + email);
+
+        if (email == null || email.isEmpty()) {
+            System.out.println(">>> ERROR: User not logged in");
+            return "redirect:/login";
+        }
+
+        try {
+            this.productService.deleteCartDetail(id, email);
+            System.out.println(">>> Cart item deleted successfully!");
+
+            // Update cart sum in session
+            Integer sum = this.productService.getCartSum(email);
+            if (sum != null) {
+                session.setAttribute("sum", sum);
+                System.out.println(">>> Updated session sum: " + sum);
+            }
+
+            redirectAttributes.addFlashAttribute("message", "Đã xóa sản phẩm khỏi giỏ hàng");
+        } catch (Exception e) {
+            System.out.println(">>> ERROR deleting cart item: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Không thể xóa sản phẩm");
+        }
+
+        return "redirect:/cart";
     }
 }

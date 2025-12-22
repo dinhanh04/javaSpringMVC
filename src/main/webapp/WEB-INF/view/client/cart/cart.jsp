@@ -109,7 +109,7 @@
                                     </thead>
                                     <tbody>
                                         <c:forEach var="item" items="${cartItems}">
-                                            <tr>
+                                            <tr data-item-id="${item.cartDetailId}"></tr>
                                                 <th scope="row">
                                                     <div class="d-flex align-items-center">
                                                         <img src="${item.productImage}"
@@ -127,7 +127,7 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-0 mt-4">
+                                                    <p class="mb-0 mt-4 item-price" data-price="${item.price}">
                                                         <fmt:formatNumber value="${item.price}" type="number" />đ
                                                     </p>
                                                 </td>
@@ -135,23 +135,25 @@
                                                     <div class="input-group quantity mt-4" style="width: 100px;">
                                                         <div class="input-group-btn">
                                                             <button
-                                                                class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                                class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                                                onclick="updateQuantity(this, -1)">
                                                                 <i class="fa fa-minus"></i>
                                                             </button>
                                                         </div>
                                                         <input type="text"
-                                                            class="form-control form-control-sm text-center border-0"
+                                                            class="form-control form-control-sm text-center border-0 quantity-input"
                                                             value="${item.quantity}" readonly>
                                                         <div class="input-group-btn">
                                                             <button
-                                                                class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                                class="btn btn-sm btn-plus rounded-circle bg-light border"
+                                                                onclick="updateQuantity(this, 1)">
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-0 mt-4 fw-bold text-primary">
+                                                    <p class="mb-0 mt-4 fw-bold text-primary item-total">
                                                         <fmt:formatNumber value="${item.total}" type="number" />đ
                                                     </p>
                                                 </td>
@@ -181,7 +183,7 @@
                                             <h1 class="display-6 mb-4">Tổng <span class="fw-normal">giỏ hàng</span></h1>
                                             <div class="d-flex justify-content-between mb-4">
                                                 <h5 class="mb-0 me-4">Tạm tính:</h5>
-                                                <p class="mb-0 fw-bold">
+                                                <p class="mb-0 fw-bold" id="cart-subtotal">
                                                     <fmt:formatNumber value="${subtotal}" type="number" />đ
                                                 </p>
                                             </div>
@@ -194,7 +196,7 @@
                                         </div>
                                         <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                             <h5 class="mb-0 ps-4 me-4">Tổng cộng:</h5>
-                                            <p class="mb-0 pe-4 fw-bold text-primary fs-5">
+                                            <p class="mb-0 pe-4 fw-bold text-primary fs-5" id="cart-total"></p>
                                                 <fmt:formatNumber value="${total}" type="number" />đ
                                             </p>
                                         </div>
@@ -227,6 +229,62 @@
 
                 <!-- Template Javascript -->
                 <script src="/client/js/main.js"></script>
+                
+                <script>
+                    function updateQuantity(button, change) {
+                        const row = button.closest('tr');
+                        const quantityInput = row.querySelector('.quantity-input');
+                        const priceElement = row.querySelector('.item-price');
+                        const totalElement = row.querySelector('.item-total');
+                        
+                        let currentQuantity = parseInt(quantityInput.value);
+                        let newQuantity = currentQuantity + change;
+                        
+                        // Không cho phép số lượng nhỏ hơn 1
+                        if (newQuantity < 1) {
+                            return;
+                        }
+                        
+                        // Cập nhật số lượng
+                        quantityInput.value = newQuantity;
+                        
+                        // Lấy giá từ data attribute
+                        const price = parseFloat(priceElement.getAttribute('data-price'));
+                        
+                        // Tính tổng tiền cho sản phẩm
+                        const itemTotal = price * newQuantity;
+                        
+                        // Cập nhật hiển thị tổng tiền sản phẩm
+                        totalElement.textContent = formatNumber(itemTotal) + 'đ';
+                        
+                        // Cập nhật tổng giỏ hàng
+                        updateCartTotal();
+                    }
+                    
+                    function updateCartTotal() {
+                        let total = 0;
+                        
+                        // Tính tổng tất cả sản phẩm
+                        document.querySelectorAll('tbody tr').forEach(row => {
+                            const quantityInput = row.querySelector('.quantity-input');
+                            const priceElement = row.querySelector('.item-price');
+                            
+                            if (quantityInput && priceElement) {
+                                const quantity = parseInt(quantityInput.value);
+                                const price = parseFloat(priceElement.getAttribute('data-price'));
+                                total += price * quantity;
+                            }
+                        });
+                        
+                        // Cập nhật hiển thị
+                        document.getElementById('cart-subtotal').textContent = formatNumber(total) + 'đ';
+                        document.getElementById('cart-total').textContent = formatNumber(total) + 'đ';
+                    }
+                    
+                    function formatNumber(num) {
+                        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                </script>
             </body>
 
             </html>
