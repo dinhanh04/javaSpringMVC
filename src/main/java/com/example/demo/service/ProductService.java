@@ -7,6 +7,9 @@ import com.example.demo.domain.User;
 import com.example.demo.repository.CartDetailRepository;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.ProductRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +34,8 @@ public class ProductService {
         Product saveProduct = this.productRepository.save(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return this.productRepository.findAll(pageable);
     }
 
     public Product getProductById(long id) {
@@ -178,7 +181,7 @@ public class ProductService {
         Optional<CartDetail> cartDetailOpt = this.cartDetailRepository.findById(cartDetailId);
         if (cartDetailOpt.isPresent()) {
             CartDetail cartDetail = cartDetailOpt.get();
-            
+
             // Verify that this cart detail belongs to the user's cart
             if (!cartDetail.getCartId().equals(cart.getId())) {
                 System.out.println(">>> ERROR: Cart detail does not belong to user's cart");

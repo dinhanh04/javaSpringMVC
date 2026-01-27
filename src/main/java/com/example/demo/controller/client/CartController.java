@@ -3,10 +3,16 @@ package com.example.demo.controller.client;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.domain.Order;
+import com.example.demo.domain.User;
+import com.example.demo.dto.OrderFormDTO;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.OrderService;
 import com.example.demo.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,9 +21,13 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class CartController {
     private final ProductService productService;
+    private final OrderService orderService;
+    private final UserRepository userRepository;
 
-    public CartController(ProductService productService) {
+    public CartController(ProductService productService, OrderService orderService, UserRepository userRepository) {
         this.productService = productService;
+        this.orderService = orderService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/add-product-to-cart/{id}")
@@ -75,7 +85,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/delete/{id}")
-    public String deleteCartItem(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String deleteCartItem(@PathVariable Long id, HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession(false);
         String email = (String) session.getAttribute("email");
 
@@ -105,5 +116,107 @@ public class CartController {
         }
 
         return "redirect:/cart";
+    }
+
+    @GetMapping("/checkout")
+    public String getCheckoutPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        if (email == null || email.isEmpty()) {
+            return "redirect:/login";
+        }
+
+        // Lấy thông tin giỏ hàng
+        java.util.List<com.example.demo.dto.CartItemDTO> cartItems = this.productService.getCartItems(email);
+
+        if (cartItems.isEmpty()) {
+            return "redirect:/cart";
+        }
+
+        // Lấy thông tin user hiện tại
+        User currentUser = this.userRepository.findByEmail(email);
+
+        // Calculate totals
+        double subtotal = cartItems.stream().mapToDouble(item -> item.getTotal()).sum();
+
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("subtotal", subtotal);
+        model.addAttribute("total", subtotal);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("orderForm", new OrderFormDTO());
+
+        return "client/cart/checkout";
+    }
+
+    @PostMapping("/checkout/place-order")
+    public String placeOrder(@ModelAttribute("orderForm") OrderFormDTO orderForm,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        if (email == null || email.isEmpty()) {
+            return "redirect:/login";
+        }
+
+        try {
+            Order order = this.orderService.createOrder(email, orderForm);
+
+            // Update cart sum in session
+            session.setAttribute("sum", 0);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "Đặt hàng thành công! Mã đơn hàng: " + order.getId());
+
+            return "redirect:/checkout/success/" + order.getId();
+        } catch (Exception e) {
+            System.out.println(">>> ERROR placing order: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error",
+                    "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());
+            return "redirect:/checkout";
+        }
+    }
+
+    @GetMapping("/checkout/success/{orderId}")
+    public String getOrderSuccess(@PathVariable Long orderId, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        if (email == null || email.isEmpty()) {
+            return "redirect:/login";
+        }
+
+        try {
+            Order order = this.orderService.getOrderById(orderId);
+
+            // Verify that the order belongs to the current user
+            if (!order.getUser().getEmail().equals(email)) {
+                return "redirect:/";
+            }
+
+            model.addAttribute("order", order);
+            return "client/cart/success";
+        } catch (Exception e) {
+            System.out.println(">>> ERROR loading order: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/orders")
+    public String getOrderHistory(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String email = (String) session.getAttribute("email");
+
+        if (email == null || email.isEmpty()) {
+            return "redirect:/login";
+        }
+
+        java.util.List<Order> orders = this.orderService.getOrdersByUser(email);
+        model.addAttribute("orders", orders);
+
+        return "client/order/history";
     }
 }

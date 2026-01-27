@@ -6,6 +6,10 @@ import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.ProductService;
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,16 +26,19 @@ public class ProductController {
     private final ProductService productService;
     private final ImageService imageService;
 
-    public ProductController(ProductService productService, ProductRepository productRepository, ImageService imageService) {
+    public ProductController(ProductService productService, ProductRepository productRepository,
+            ImageService imageService) {
         this.productService = productService;
         this.imageService = imageService;
     }
 
     @GetMapping("/admin/product")
-    public String getAdminDashboard(Model model) {
-        List<Product> products = this.productService.getAllProducts();
-        model.addAttribute("products1", products);
-        System.out.println("check product list: " + products);
+    public String getAdminDashboard(Model model,
+            @RequestParam("page") int page) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> products = this.productService.getAllProducts(pageable);
+        List<Product> listProducts = products.getContent();
+        model.addAttribute("products1", listProducts);
         return "admin/product/show";
     }
 
@@ -42,13 +49,13 @@ public class ProductController {
     }
 
     @PostMapping(value = "/admin/product/create")
-    public String createProductPage(Model model, @ModelAttribute("newProduct")
-    @Valid Product product, BindingResult bindingResult, @RequestParam("imageFile") MultipartFile file) {
+    public String createProductPage(Model model, @ModelAttribute("newProduct") @Valid Product product,
+            BindingResult bindingResult, @RequestParam("imageFile") MultipartFile file) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         for (FieldError error : fieldErrors) {
             System.out.println(">>>>: " + error.getField() + ", Message: " + error.getDefaultMessage());
         }
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "admin/product/createProduct";
         }
 
@@ -64,7 +71,7 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product/{id}")
-    public String getProductById( Model model, @PathVariable long id) {
+    public String getProductById(Model model, @PathVariable long id) {
         Product product = productService.getProductById(id);
         model.addAttribute("product2", product);
         return "admin/product/detail";
@@ -91,7 +98,7 @@ public class ProductController {
             currentProduct.setTarget(product.getTarget());
             currentProduct.setShortDesc(product.getShortDesc());
             currentProduct.setDetailDesc(product.getDetailDesc());
-            
+
             if (file != null && !file.isEmpty()) {
                 Image image = imageService.handleSaveImage(file);
                 if (image != null) {
